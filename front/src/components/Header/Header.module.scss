@@ -1,0 +1,24 @@
+.menu {
+    background-color: #2196f3;
+    height: 64px;
+    &__list {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+    }
+    &__item {
+        display: block;
+    }
+    &__link {
+        color: rgba($color: #ffffff, $alpha: .7);
+        text-decoration: none;
+        padding: 23px 24px;
+        display: block;
+        &_active {
+            background-color: #1e88e5;
+            color: #ffffff;
+        }
+    }
+}

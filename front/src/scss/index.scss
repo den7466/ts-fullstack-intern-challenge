@@ -1,0 +1,19 @@
+@use './normalize';
+@use '../fonts/Roboto/roboto.scss';
+
+:root {
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1440px;
+  padding: 0 62px;
+  margin: 0 auto;
+}
