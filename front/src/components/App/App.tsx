@@ -1,35 +1,35 @@
-import clsx from "clsx";
-import styles from "./App.module.scss";
-import { HTMLAttributes, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Gallery from "../Gallery/Gallery";
-import Header from "../Header/Header";
-import { TImage } from "../../types/types";
-import { mockImages } from "./mock";
+import clsx from 'clsx';
+import styles from './App.module.scss';
+import { HTMLAttributes, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Gallery from '../Gallery/Gallery';
+import Header from '../Header/Header';
+import { addLikeThunk, deleteLikeThunk, getLikesSelector, getLikesThunk } from '../../services/slices/likesSlice';
+import { useDispatch, useSelector } from '../../services/store';
+import { getImagesSelector, getImagesThunk } from '../../services/slices/imagesSlice';
 
 function App(props: HTMLAttributes<HTMLElement>) {
   const { className } = props;
-  const [appState, setAppState] = useState<TImage[]>([]);
+  const likesItems = useSelector(getLikesSelector);
+  const imagesItems = useSelector(getImagesSelector);
+  const favouritesData = imagesItems.filter(item => likesItems.some(element => element.cat_id === item.id));
+  const dispatch = useDispatch();
 
-  const favourites: TImage[] = [];
-  appState.forEach(item => {
-    if (item.favourite)
-      favourites.push(item);
-  });
-
-  const onFavouriteHandler = (id: string) => {
-    const tempData = appState;
-    const result = tempData.find((item) => item.id === id);
+  const onLikesHandler = (id: string) => {
+    const nowDate = new Date();
+    const result = imagesItems.find((item) => item.id === id);
     if (result) {
-      const index = tempData.indexOf(result);
-      result.favourite = !result.favourite;
-      tempData.splice(index, 1, result);
-      setAppState([...tempData]);
+      if (likesItems.some(item => item.cat_id === result.id)) {
+        dispatch(deleteLikeThunk(result.id));
+      } else {
+        dispatch(addLikeThunk({ cat_id: result.id, created_at: nowDate }));
+      }
     }
   };
 
   useEffect(() => {
-    setAppState(mockImages);
+    dispatch(getLikesThunk());
+    dispatch(getImagesThunk());
   }, []);
 
   return (
@@ -40,15 +40,16 @@ function App(props: HTMLAttributes<HTMLElement>) {
           <Route
             path={'/'}
             element={
-              <Gallery data={appState} onClickHandler={onFavouriteHandler} />
+              <Gallery data={imagesItems} likes={likesItems} onLikesHandler={onLikesHandler} />
             }
           />
           <Route
             path={'/favourites'}
             element={
               <Gallery
-                data={favourites}
-                onClickHandler={onFavouriteHandler}
+                data={favouritesData}
+                likes={likesItems}
+                onLikesHandler={onLikesHandler}
               />
             }
           />

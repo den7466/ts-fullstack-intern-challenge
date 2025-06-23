@@ -4,7 +4,14 @@ WORKDIR /app/client
 COPY . .
 
 RUN npm ci
-RUN npm run build
+
+ARG VITE_IMAGE_API_BASE_URL="https://api.thecatapi.com/v1"
+
+ARG VITE_IMAGE_API_KEY="live_cF67OsfpGgyhej375tKAolOjpAl7jAMySEIrxiRfGHf2wCD42WQ6osUReUP3f6oz"
+
+ARG VITE_LIKES_API_BASE_URL="http://localhost:8080/api"
+
+RUN VITE_IMAGE_API_BASE_URL=${VITE_IMAGE_API_BASE_URL} VITE_IMAGE_API_KEY=${VITE_IMAGE_API_KEY} VITE_LIKES_API_BASE_URL=${VITE_LIKES_API_BASE_URL} npm run build
 
 FROM nginx:alpine
 

@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import styles from './Header.module.scss';
 import { HTMLAttributes } from 'react';
+import { NavLink } from 'react-router-dom';
 
 function Header(props: HTMLAttributes<HTMLElement>) {
   const { className } = props;
@@ -11,17 +12,12 @@ function Header(props: HTMLAttributes<HTMLElement>) {
         <div className={'container'}>
           <ul className={clsx(styles.menu__list)}>
             <li className={clsx(styles.menu__item)}>
-              <a
-                className={clsx(styles.menu__link, styles.menu__link_active)}
-                href="/"
-              >
-                Все котики
-              </a>
+              <NavLink to={'/'} className={({isActive}) => isActive ?  clsx(styles.menu__link, styles.menu__link_active) : clsx(styles.menu__link)}>Все котики</NavLink>
             </li>
             <li className={clsx(styles.menu__item)}>
-              <a className={clsx(styles.menu__link)} href="/favourites">
+              <NavLink to={'/favourites'} className={({isActive}) => isActive ?  clsx(styles.menu__link, styles.menu__link_active) : clsx(styles.menu__link)}>
                 Любимые котики
-              </a>
+              </NavLink>
             </li>
           </ul>
         </div>

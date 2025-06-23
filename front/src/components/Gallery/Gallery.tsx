@@ -1,23 +1,26 @@
 import clsx from 'clsx';
 import styles from './Gallery.module.scss';
-import { HTMLAttributes, useEffect, useState } from 'react';
+import { HTMLAttributes } from 'react';
 import Card from '../Card/Card';
-import { TImage } from '../../types/types';
+import { TImage, TLike } from '../../types/types';
 
 type TGalleryProps = {
   data: TImage[];
-  onClickHandler: (id: string) => void;
+  likes: TLike[];
+  onLikesHandler: (id: string) => void;
 } & HTMLAttributes<HTMLElement>;
 
 function Gallery(props: TGalleryProps) {
-  const { data, onClickHandler, className } = props;
+  const { data, likes, onLikesHandler, className } = props;
 
   return (
     <>
       <div className={'container'}>
         <div className={clsx(styles.gallery, className)}>
-          {data.map((item) =>
-            <Card url={item.url} description={item.description} favourite={item.favourite} onClick={() => onClickHandler(item.id)} key={item.id} />
+          {data.map((item) =>{
+            const isFavourite = likes.some(element => element.cat_id === item.id);
+            return <Card url={item.url} description={item.breads ? item.breads[0].name : ''} favourite={isFavourite} onClick={() => onLikesHandler(item.id)} key={item.id} />
+          }
           )}
         </div>
       </div>
